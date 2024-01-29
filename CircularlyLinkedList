@@ -1,0 +1,72 @@
+package lab1;
+
+public class CircularlyLinkedList<E> implements Cloneable {
+
+    private static class Node<E> {
+        E element;
+        Node<E> next;
+
+        Node(E element) {
+            this.element = element;
+        }
+    }
+
+    private Node<E> tail;
+
+    public CircularlyLinkedList() {
+        tail = null;
+    }
+
+    public void addLast(E e) {
+        Node<E> newNode = new Node<>(e);
+        if (tail == null) {
+            newNode.next = newNode;
+        } else {
+            newNode.next = tail.next;
+            tail.next = newNode;
+        }
+        tail = newNode;
+    }
+
+    @Override
+    public CircularlyLinkedList<E> clone() throws CloneNotSupportedException {
+        if (tail == null) {
+            return new CircularlyLinkedList<>();
+        }
+
+        CircularlyLinkedList<E> other = new CircularlyLinkedList<>();
+        Node<E> walk = tail.next;
+        do {
+            other.addLast(walk.element);
+            walk = walk.next;
+        } while (walk != tail.next);
+
+        return other;
+    }
+
+    public void printList() {
+        if (tail == null) return;
+
+        Node<E> temp = tail.next;
+        do {
+            System.out.print(temp.element + " ");
+            temp = temp.next;
+        } while (temp != tail.next);
+        System.out.println();
+    }
+
+    public static void main(String[] args) throws CloneNotSupportedException {
+        CircularlyLinkedList<Integer> list = new CircularlyLinkedList<>();
+        list.addLast(1);
+        list.addLast(2);
+        list.addLast(3);
+
+        System.out.println("Original List:");
+        list.printList();
+
+        CircularlyLinkedList<Integer> clonedList = list.clone();
+
+        System.out.println("Cloned List:");
+        clonedList.printList();
+    }
+}
